@@ -1,6 +1,10 @@
-import MainImage from "./MainImage"
+import { useState } from "react";
+import ImageEditor from "./ImageEditor"
+import ImageInput from "./ImageInput";
 
 function App() {
+  const [image, setImage] = useState<string>("");
+
   // Stickers
   // Main Image
   // Filters
@@ -8,7 +12,11 @@ function App() {
   // Download
   return (
     <div className="App">
-      <MainImage />
+      {
+        image !== "" ?
+          <ImageEditor image={image} /> :
+          <ImageInput onImageAccepted={(img: string) => { setImage(img) }} />
+      }
     </div>
   )
 }
