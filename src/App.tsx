@@ -1,8 +1,15 @@
+import MainImage from "./MainImage"
+
 function App() {
+  // Stickers
+  // Main Image
+  // Filters
+  // Frames
+  // Download
   return (
-    <>
-      Whatsup gamers.
-    </>
+    <div className="App">
+      <MainImage />
+    </div>
   )
 }
 
