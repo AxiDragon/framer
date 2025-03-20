@@ -8,12 +8,6 @@ type Props = {
 
 const filters: Filter[] = [
 	new Filter({
-		name: "blur",
-		value: "0px",
-		defaultValue: 0,
-		onChange: (e: number) => `${e * 10}px`
-	}),
-	new Filter({
 		name: "opacity",
 		value: "1",
 		defaultValue: 1,
@@ -74,14 +68,24 @@ function ImageEditor({ image }: Props) {
 		if (!imageRef.current) return;
 
 		try {
+			const img = new Image();
+
+			await new Promise((resolve, reject) => {
+				img.onload = resolve;
+				img.onerror = reject;
+				img.crossOrigin = "anonymous";
+				img.src = image;
+			});
+
 			const canvas = document.createElement("canvas");
-			canvas.width = imageRef.current.offsetWidth;
-			canvas.height = imageRef.current.offsetHeight;
+			canvas.width = img.naturalWidth;
+			canvas.height = img.naturalHeight;
 
 			const ctx = canvas.getContext("2d");
+
 			if (ctx) {
 				ctx.filter = getFilter();
-				ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
 				const url = canvas.toDataURL("image/png");
 
@@ -100,18 +104,15 @@ function ImageEditor({ image }: Props) {
 	}
 
 	return (
-		<div className="EditedImageContainer">
+		<div className="ImageEditor">
 			<div>
 				<div className="EditedImage">
 					<img src={image} ref={imageRef} alt="main" className="MainImage"
 						style={{
 							filter: getFilter(),
 						}} />
-					<div>
-						Im here too
-					</div>
+					<button onClick={onDownload}>Download Image</button>
 				</div>
-				<button onClick={onDownload}>Download Image</button>
 			</div>
 			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
 		</div>
