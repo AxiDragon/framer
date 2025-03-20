@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "gh-pages -d dist",
+    "b-d": "npm run build && npm run deploy",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "framer": "file:",
+    "gh-pages": "^6.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
