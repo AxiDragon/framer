@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import FilterSliders from "./components/FilterSliders";
 import Filter from "./components/Filter";
+import StickerGrabber from "./components/StickerGrabber";
+import FrameGrabber from "./components/FrameGrabber";
 
 type Props = {
 	image: string;
@@ -105,16 +107,16 @@ function ImageEditor({ image }: Props) {
 
 	return (
 		<div className="ImageEditor">
-			<div>
-				<div className="EditedImage">
-					<img src={image} ref={imageRef} alt="main" className="MainImage"
-						style={{
-							filter: getFilter(),
-						}} />
-					<button onClick={onDownload}>Download Image</button>
-				</div>
+			<div className="EditedImage">
+				<img src={image} ref={imageRef} alt="main" className="MainImage"
+					style={{
+						filter: getFilter(),
+					}} />
+				<button onClick={onDownload}>Download Image</button>
 			</div>
 			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
+			<StickerGrabber />
+			<FrameGrabber />
 		</div>
 	)
 }
