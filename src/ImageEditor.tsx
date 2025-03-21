@@ -3,6 +3,7 @@ import FilterSliders from "./components/FilterSliders";
 import Filter from "./components/Filter";
 import StickerGrabber from "./components/StickerGrabber";
 import FrameGrabber from "./components/FrameGrabber";
+import frames from "./data/frames";
 
 type Props = {
 	image: string;
@@ -39,7 +40,7 @@ const filters: Filter[] = [
 		defaultValue: 0.5,
 		onChange: (e: number) => `${e * 200}%`
 	}),
-]
+];
 
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
@@ -60,7 +61,6 @@ function ImageEditor({ image }: Props) {
 		const filterToUpdate = filterStyle.find(f => f.name === filter);
 
 		if (filterToUpdate) {
-			console.log('updating');
 			filterToUpdate.setValue(value);
 			setFilterStyle([...filterStyle]);
 		}
@@ -79,15 +79,31 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
+			const w = img.naturalHeight / 10;
+
 			const canvas = document.createElement("canvas");
-			canvas.width = img.naturalWidth;
-			canvas.height = img.naturalHeight;
+			canvas.width = img.naturalWidth + w * 2;
+			canvas.height = img.naturalHeight + w * 2;
 
 			const ctx = canvas.getContext("2d");
 
 			if (ctx) {
 				ctx.filter = getFilter();
-				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, w, w, canvas.width - w * 2, canvas.height - w * 2);
+
+				//draw in frame
+				ctx.filter = "none";
+				const { cornerImage, edgeImage } = await frames[1].getImages();
+
+				for (let i = 0; i < 4; i++) {
+					const baseLength = i % 2 == 0 ? canvas.width : canvas.height;
+					//draw in a corner
+					ctx.drawImage(cornerImage, 0, 0, w, w);
+					//draw in an edge
+					ctx.drawImage(edgeImage, w, 0, baseLength - w * 2, w);
+					ctx.translate(baseLength, 0); //rotation will hook it correctly
+					ctx.rotate(Math.PI / 2);
+				}
 
 				const url = canvas.toDataURL("image/png");
 
