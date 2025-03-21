@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import FilterSliders from "./components/FilterSliders";
 import Filter from "./components/Filter";
 import StickerGrabber from "./components/StickerGrabber";
-import FrameGrabber from "./components/FrameGrabber";
-import frames from "./data/frames";
+import FrameSelector from "./components/FrameSelector";
+import Frame from "./components/Frame";
 
 type Props = {
 	image: string;
@@ -44,6 +44,7 @@ const filters: Filter[] = [
 
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
+	const [frame, setFrame] = useState<Frame | null>(null);
 
 	const imageRef = useRef<HTMLImageElement>(null);
 
@@ -79,7 +80,7 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
-			const w = img.naturalHeight / 10;
+			const w = frame ? img.naturalHeight / 10 : 0;
 
 			const canvas = document.createElement("canvas");
 			canvas.width = img.naturalWidth + w * 2;
@@ -91,18 +92,20 @@ function ImageEditor({ image }: Props) {
 				ctx.filter = getFilter();
 				ctx.drawImage(img, w, w, canvas.width - w * 2, canvas.height - w * 2);
 
-				//draw in frame
-				ctx.filter = "none";
-				const { cornerImage, edgeImage } = await frames[1].getImages();
+				if (frame) {
+					//draw in frame
+					ctx.filter = "none";
+					const { cornerImage, edgeImage } = await frame.getHTMLImages();
 
-				for (let i = 0; i < 4; i++) {
-					const baseLength = i % 2 == 0 ? canvas.width : canvas.height;
-					//draw in a corner
-					ctx.drawImage(cornerImage, 0, 0, w, w);
-					//draw in an edge
-					ctx.drawImage(edgeImage, w, 0, baseLength - w * 2, w);
-					ctx.translate(baseLength, 0); //rotation will hook it correctly
-					ctx.rotate(Math.PI / 2);
+					for (let i = 0; i < 4; i++) {
+						const baseLength = i % 2 == 0 ? canvas.width : canvas.height;
+						//draw in a corner
+						ctx.drawImage(cornerImage, 0, 0, w, w);
+						//draw in an edge
+						ctx.drawImage(edgeImage, w, 0, baseLength - w * 2, w);
+						ctx.translate(baseLength, 0); //rotation will hook it correctly
+						ctx.rotate(Math.PI / 2);
+					}
 				}
 
 				const url = canvas.toDataURL("image/png");
@@ -132,7 +135,7 @@ function ImageEditor({ image }: Props) {
 			</div>
 			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
 			<StickerGrabber />
-			<FrameGrabber />
+			<FrameSelector onFrameSelected={(frame: Frame) => setFrame(frame)} />
 		</div>
 	)
 }

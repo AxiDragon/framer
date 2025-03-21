@@ -20,10 +20,14 @@ export default class Frame {
 		return img;
 	}
 
-	public async getImages() {
+	public async getHTMLImages() {
 		const cornerImage = await this.loadImage(this.cornerImage);
 		const edgeImage = await this.loadImage(this.edgeImage);
 
 		return { cornerImage, edgeImage };
+	}
+
+	public getStringImages() {
+		return { cornerImage: this.cornerImage, edgeImage: this.edgeImage };
 	}
 }

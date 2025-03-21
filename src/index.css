@@ -34,6 +34,19 @@ body,
 	align-items: center;
 }
 
+.FrameRenderer {
+	display: grid;
+	grid-template-columns: repeat(3, 50px);
+	grid-template-rows: repeat(3, 50px);
+	cursor: pointer;
+}
+
+.FrameRenderer img {
+	object-fit: contain;
+	width: 100%;
+	height: 100%;
+}
+
 .StickerGrabber {
 	grid-row: 1 / 4;
 	grid-column: 1;
@@ -42,7 +55,14 @@ body,
 	background-color: aliceblue;
 }
 
-.FrameGrabber {
+.FrameSelector {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 15px;
+	padding: 15px;
+}
+
+.FrameSelectorContainer {
 	grid-row: 1 / 4;
 	grid-column: 3;
 	width: 100%;
