@@ -82,7 +82,7 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
-			const w = frame ? Math.max(img.naturalHeight, img.naturalWidth) / 10 : 0;
+			const w = frame !== EMPTY_FRAME ? Math.max(img.naturalHeight, img.naturalWidth) / 10 : 0;
 
 			const canvas = document.createElement("canvas");
 			canvas.width = img.naturalWidth + w * 2;
