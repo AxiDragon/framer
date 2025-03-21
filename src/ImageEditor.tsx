@@ -4,6 +4,8 @@ import Filter from "./components/Filter";
 import StickerGrabber from "./components/StickerGrabber";
 import FrameSelector from "./components/FrameSelector";
 import Frame from "./components/Frame";
+import { EMPTY_FRAME } from "./data/frames";
+import FrameWrapper from "./components/FrameRenderer";
 
 type Props = {
 	image: string;
@@ -44,7 +46,7 @@ const filters: Filter[] = [
 
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
-	const [frame, setFrame] = useState<Frame | null>(null);
+	const [frame, setFrame] = useState<Frame>(EMPTY_FRAME);
 
 	const imageRef = useRef<HTMLImageElement>(null);
 
@@ -80,7 +82,7 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
-			const w = frame ? img.naturalHeight / 10 : 0;
+			const w = frame ? Math.max(img.naturalHeight, img.naturalWidth) / 10 : 0;
 
 			const canvas = document.createElement("canvas");
 			canvas.width = img.naturalWidth + w * 2;
@@ -95,7 +97,7 @@ function ImageEditor({ image }: Props) {
 				if (frame) {
 					//draw in frame
 					ctx.filter = "none";
-					const { cornerImage, edgeImage } = await frame.getHTMLImages();
+					const { cornerImage, topEdgeImage: edgeImage } = await frame.getHTMLImages();
 
 					for (let i = 0; i < 4; i++) {
 						const baseLength = i % 2 == 0 ? canvas.width : canvas.height;
@@ -127,11 +129,12 @@ function ImageEditor({ image }: Props) {
 	return (
 		<div className="ImageEditor">
 			<div className="EditedImage">
-				<img src={image} ref={imageRef} alt="main" className="MainImage"
-					style={{
-						filter: getFilter(),
-					}} />
-				<button onClick={onDownload}>Download Image</button>
+				<FrameWrapper frame={frame} className="MainImage" onClick={onDownload}>
+					<img src={image} ref={imageRef} alt="main"
+						style={{
+							filter: getFilter(),
+						}} />
+				</FrameWrapper>
 			</div>
 			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
 			<StickerGrabber />

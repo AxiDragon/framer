@@ -1,6 +1,6 @@
-import frames from "../data/frames";
+import frames, { EMPTY_FRAME } from "../data/frames";
 import Frame from "./Frame";
-import FrameRenderer from "./FrameRenderer";
+import FrameWrapper from "./FrameRenderer";
 
 type Props = {
 	onFrameSelected: (frame: Frame) => void;
@@ -11,8 +11,16 @@ const FrameSelector = ({ onFrameSelected }: Props) => {
 		<div className="FrameSelectorContainer">
 			<div className="FrameSelector">
 				{frames.map((frame, index) => (
-					<FrameRenderer key={index} frame={frame} onClick={() => onFrameSelected(frame)} />
+					<FrameWrapper key={index} frame={frame}
+						onClick={() => onFrameSelected(frame)}
+						framePercentage={0.45}>
+						<div style={{ width: 75, height: 75 }} />
+					</FrameWrapper>
 				))}
+				<div style={{ fontSize: 50, color: "red", width: 50, height: 50, cursor: "pointer" }}
+					onClick={() => onFrameSelected(EMPTY_FRAME)}>
+					❌
+				</div>
 			</div>
 		</div>
 	)
