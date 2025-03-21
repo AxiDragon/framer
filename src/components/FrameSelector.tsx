@@ -8,8 +8,8 @@ type Props = {
 
 const FrameSelector = ({ onFrameSelected }: Props) => {
 	return (
-		<div className="FrameSelectorContainer">
-			<div className="FrameSelector">
+		<div className="FrameSelectorContainer side-column">
+			<div className="auto-fill-grid">
 				{frames.map((frame, index) => (
 					<FrameWrapper key={index} frame={frame}
 						onClick={() => onFrameSelected(frame)}

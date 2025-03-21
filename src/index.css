@@ -6,6 +6,20 @@ body,
 	height: 100vh;
 }
 
+.side-column {
+	grid-row: 1 / 4;
+	width: 100%;
+	height: 100%;
+	background-color: aliceblue;
+}
+
+.auto-fill-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 15px;
+	padding: 15px;
+}
+
 .App {
 	width: 100%;
 	height: 100%;
@@ -53,26 +67,11 @@ body,
 }
 
 .StickerGrabber {
-	grid-row: 1 / 4;
 	grid-column: 1;
-	width: 100%;
-	height: 100%;
-	background-color: aliceblue;
-}
-
-.FrameSelector {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 15px;
-	padding: 15px;
 }
 
 .FrameSelectorContainer {
 	grid-row: 1 / 4;
-	grid-column: 3;
-	width: 100%;
-	height: 100%;
-	background-color: aliceblue;
 }
 
 .MainImage {

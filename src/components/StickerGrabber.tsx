@@ -1,6 +1,6 @@
 const StickerGrabber = () => {
 	return (
-		<div className="StickerGrabber">
+		<div className="StickerGrabber side-column">
 			<h1>Sticker Grabber</h1>
 		</div>
 	)
