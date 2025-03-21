@@ -6,6 +6,8 @@ import FrameSelector from "./components/FrameSelector";
 import Frame from "./components/Frame";
 import { EMPTY_FRAME } from "./data/frames";
 import FrameWrapper from "./components/FrameRenderer";
+import { StickerProps } from "./components/Sticker";
+import { STICKER_SIZE } from "./data/constants";
 
 type Props = {
 	image: string;
@@ -47,6 +49,7 @@ const filters: Filter[] = [
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
 	const [frame, setFrame] = useState<Frame>(EMPTY_FRAME);
+	const [stickers, setStickers] = useState<Record<number, StickerProps>>({});
 
 	const imageRef = useRef<HTMLImageElement>(null);
 
@@ -58,6 +61,13 @@ function ImageEditor({ image }: Props) {
 		}
 
 		return result;
+	}
+
+	const onStickerMoved = (sticker: StickerProps) => {
+		setStickers({
+			...stickers,
+			[sticker.id]: sticker
+		});
 	}
 
 	const onFilterSliderChanged = (filter: string, value: number) => {
@@ -82,7 +92,15 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
+			const scale = img.naturalHeight / imageRef.current.offsetHeight;
 			const w = frame !== EMPTY_FRAME ? Math.max(img.naturalHeight, img.naturalWidth) / 10 : 0;
+
+			const imageRect = imageRef.current.getBoundingClientRect();
+			const relativeStickers = Object.values(stickers).map(sticker => ({
+				...sticker,
+				x: (sticker.x - imageRect.x) * scale,
+				y: (sticker.y - imageRect.y) * scale,
+			}));
 
 			const canvas = document.createElement("canvas");
 			canvas.width = img.naturalWidth + w * 2;
@@ -93,10 +111,28 @@ function ImageEditor({ image }: Props) {
 			if (ctx) {
 				ctx.filter = getFilter();
 				ctx.drawImage(img, w, w, canvas.width - w * 2, canvas.height - w * 2);
+				ctx.filter = "none";
+
+				//draw in stickers
+				for (const sticker of relativeStickers) {
+					const stickerImg = new Image();
+
+					await new Promise((resolve, reject) => {
+						stickerImg.onload = resolve;
+						stickerImg.onerror = reject;
+						stickerImg.crossOrigin = "anonymous";
+						stickerImg.src = sticker.image;
+					});
+
+					const aspectRatio = stickerImg.naturalWidth / stickerImg.naturalHeight;
+
+					ctx.drawImage(stickerImg, sticker.x + w, sticker.y + w,
+						STICKER_SIZE * scale * aspectRatio,
+						STICKER_SIZE * scale);
+				}
 
 				if (frame) {
 					//draw in frame
-					ctx.filter = "none";
 					const { cornerImage, topEdgeImage: edgeImage } = await frame.getHTMLImages();
 
 					for (let i = 0; i < 4; i++) {
@@ -137,7 +173,7 @@ function ImageEditor({ image }: Props) {
 				</FrameWrapper>
 			</div>
 			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
-			<StickerGrabber />
+			<StickerGrabber onStickerMoved={onStickerMoved} />
 			<FrameSelector onFrameSelected={(frame: Frame) => setFrame(frame)} />
 		</div>
 	)
