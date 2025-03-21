@@ -3,13 +3,9 @@ import ImageEditor from "./ImageEditor"
 import ImageInput from "./ImageInput";
 
 function App() {
-  const [image, setImage] = useState<string>("");
+  const defaultImage = import.meta.env.VITE_DEFAULT_IMAGE || "";
+  const [image, setImage] = useState<string>(defaultImage);
 
-  // Stickers
-  // Main Image
-  // Filters
-  // Frames
-  // Download
   return (
     <div className="App">
       {
