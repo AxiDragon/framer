@@ -113,6 +113,10 @@ function ImageEditor({ image }: Props) {
 				ctx.drawImage(img, w, w, canvas.width - w * 2, canvas.height - w * 2);
 				ctx.filter = "none";
 
+				ctx.save();
+				ctx.beginPath();
+				ctx.rect(w, w, canvas.width - w * 2, canvas.height - w * 2);
+				ctx.clip();
 				//draw in stickers
 				for (const sticker of relativeStickers) {
 					const stickerImg = new Image();
@@ -130,6 +134,8 @@ function ImageEditor({ image }: Props) {
 						STICKER_SIZE * scale * aspectRatio,
 						STICKER_SIZE * scale);
 				}
+
+				ctx.restore();
 
 				if (frame) {
 					//draw in frame
