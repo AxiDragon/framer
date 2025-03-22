@@ -17,19 +17,33 @@ function FrameWrapper({ frame, framePercentage = 0.1, onClick, children, style, 
 	const contentRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (contentRef.current) {
-			const width = Math.max(contentRef.current.offsetHeight, contentRef.current.offsetWidth);
+		const resizeObserver = new ResizeObserver((entries) => {
+			if (contentRef.current) {
+				const rect = entries[0].contentRect;
+				const width = Math.max(rect.height, rect.width);
+				setFrameWidth(width * framePercentage);
+			}
+		});
 
-			setFrameWidth(width * framePercentage);
+		if (contentRef.current) {
+			resizeObserver.observe(contentRef.current);
 		}
-	}, [contentRef]);
+
+		return () => {
+			if (contentRef.current) {
+				resizeObserver.disconnect();
+			}
+		};
+	}, [contentRef, framePercentage]);
 
 	return (
-		<div className={`FrameRenderer ${className}`} onClick={onClick} style={{
+		<div className={`FrameRenderer ${className || ""}`} onClick={onClick} style={{
 			...style,
 			gridTemplateColumns: `${frameWidth}px auto ${frameWidth}px`,
 			gridTemplateRows: `${frameWidth}px auto ${frameWidth}px`,
 			cursor: onClick ? "pointer" : "default",
+			width: "fit-content",
+			height: "fit-content",
 		}}>
 			<img src={cornerImage} alt="corner" draggable={false}
 				style={{ height: frameWidth, width: frameWidth }} />

@@ -50,8 +50,8 @@ body,
 
 .FrameRenderer {
 	display: grid;
-	grid-template-columns: auto minmax(min-content, max-content) auto;
-	grid-template-rows: auto minmax(min-content, max-content) auto;
+	grid-template-columns: auto max-content auto;
+	grid-template-rows: auto max-content auto;
 	width: max-content;
 	height: max-content;
 }
