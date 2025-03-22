@@ -11,14 +11,30 @@ export type StickerProps = {
 type Props = {
 	image: string;
 	id: number;
+	x?: number;
+	y?: number;
+	xOffset?: number;
+	yOffset?: number;
+	instantDrag?: boolean;
 	onStickerMoved?: (sticker: StickerProps) => void;
 }
 
-function Sticker({ image, onStickerMoved, id }: Props) {
-	const [position, setPosition] = useState({ x: 0, y: 0 });
-	const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-	const [isDragging, setIsDragging] = useState(false);
+function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0, instantDrag = false, id }: Props) {
+	const [mouseOffset, setMouseOffset] = useState({ x: xOffset, y: yOffset });
+	const [position, setPosition] = useState({ x: x + xOffset, y: y + yOffset });
+	const [isDragging, setIsDragging] = useState(instantDrag);
 	const imgRef = useRef<HTMLImageElement>(null);
+
+
+	function calculateMouseOffset(mouseX: number, mouseY: number) {
+		if (imgRef.current) {
+			const rect = imgRef.current.getBoundingClientRect();
+			setMouseOffset({
+				x: rect.left - mouseX,
+				y: rect.top - mouseY,
+			});
+		}
+	}
 
 	const onMouseUp = () => {
 		if (isDragging && onStickerMoved) {
@@ -30,14 +46,8 @@ function Sticker({ image, onStickerMoved, id }: Props) {
 
 	const onMouseDown = (e: React.MouseEvent) => {
 		setIsDragging(true);
-
-		if (imgRef.current) {
-			const rect = imgRef.current.getBoundingClientRect();
-			setMouseOffset({
-				x: rect.left - e.clientX,
-				y: rect.top - e.clientY,
-			});
-		}
+		console.log('ye');
+		calculateMouseOffset(e.clientX, e.clientY);
 	}
 
 	const onMouseMove = (e: MouseEvent) => {
@@ -55,7 +65,7 @@ function Sticker({ image, onStickerMoved, id }: Props) {
 		return () => {
 			window.removeEventListener("mousemove", onMouseMove);
 		};
-	}, [isDragging]);
+	}, [isDragging, mouseOffset]);
 
 	useEffect(() => {
 		window.addEventListener("mouseup", onMouseUp);
