@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { STICKER_SIZE } from "../data/constants";
+import { STICKER_VH } from "../data/constants";
 
 export type StickerProps = {
 	image: string;
@@ -46,7 +46,6 @@ function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0
 
 	const onMouseDown = (e: React.MouseEvent) => {
 		setIsDragging(true);
-		console.log('ye');
 		calculateMouseOffset(e.clientX, e.clientY);
 	}
 
@@ -77,7 +76,11 @@ function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0
 
 	return (
 		<img src={image} alt="sticker" className="Sticker"
-			style={{ top: position.y, left: position.x, height: STICKER_SIZE }}
+			style={{
+				top: `${position.y / window.innerHeight * 100}vh`,
+				left: `${position.x / window.innerWidth * 100}vw`,
+				height: `${STICKER_VH}vh`
+			}}
 			onMouseDown={onMouseDown}
 			ref={imgRef}
 			draggable={false}

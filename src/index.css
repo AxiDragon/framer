@@ -50,14 +50,19 @@ body,
 
 .FrameRenderer {
 	display: grid;
-	grid-template-columns: auto max-content auto;
-	grid-template-rows: auto max-content auto;
-	width: max-content;
-	height: max-content;
+	grid-template-columns: auto fit-content auto;
+	grid-template-rows: auto fit-content auto;
+	width: fit-content;
+	height: fit-content;
 }
 
 .FrameRenderer img[alt="edge"] {
 	object-fit: fill;
+	z-index: 3;
+}
+
+.FrameRenderer img[alt="corner"] {
+	z-index: 3;
 }
 
 .FrameRenderer img {
@@ -76,20 +81,78 @@ body,
 }
 
 .MainImage {
-	max-width: 70%;
-	max-height: 70%;
+	display: flex;
+	place-content: center;
+	height: 60vh;
+	width: 100%;
+	padding: 25px;
+	box-sizing: border-box;
+}
+
+.MainImage img {
 	object-fit: contain;
 }
 
 .ImageEditor {
 	display: grid;
-	width: 100vw;
-	height: 100vh;
-	grid-template-columns: 30% 40% 30%;
-	grid-template-rows: repeat(3, calc(100% / 3));
+	width: 100%;
+	height: 100%;
+	grid-template-rows: calc(200% / 3) calc(100% / 3);
+	place-items: center;
+}
+
+.ImageEditorMenu {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	grid-template-rows: auto calc(100% / 3);
+	background-color: aliceblue;
+}
+
+.MenuItemContainer {
+	width: 100%;
+	display: flex;
+	gap: 1vw;
+	align-items: center;
+	overflow-x: scroll;
+	overflow-y: hidden;
+}
+
+.MenuItemContainer>* {
+	height: 18vh;
+	object-fit: contain;
+	box-sizing: border-box;
+}
+
+.ImageEditorButtonContainer {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: 1fr;
+	place-items: center;
+	grid-row: 2;
+}
+
+.ImageEditorButton {
+	width: 100%;
+	height: 100%;
+	border-radius: 25px 25px 0 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(100, 176, 243);
 }
 
 .Sticker {
 	height: 100px;
 	position: absolute;
+	z-index: 2;
+}
+
+.CornerButton {
+	position: absolute;
+	height: 100px;
+	width: 100px;
+	top: 0;
+	right: 0;
+	background-color: red;
 }

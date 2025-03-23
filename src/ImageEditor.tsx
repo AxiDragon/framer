@@ -7,7 +7,10 @@ import Frame from "./components/Frame";
 import { EMPTY_FRAME } from "./data/frames";
 import FrameWrapper from "./components/FrameRenderer";
 import { StickerProps } from "./components/Sticker";
-import { STICKER_SIZE } from "./data/constants";
+import StickerManager from "./components/StickerManager";
+import { STICKER_VH } from "./data/constants";
+
+type MenuName = "stickers" | "filters" | "frames";
 
 type Props = {
 	image: string;
@@ -50,6 +53,8 @@ function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
 	const [frame, setFrame] = useState<Frame>(EMPTY_FRAME);
 	const [stickers, setStickers] = useState<Record<number, StickerProps>>({});
+	const [selectedMenu, setSelectedMenu] = useState<MenuName | null>("stickers");
+	// const [selectedMenu, setSelectedMenu] = useState<MenuName | null>(null);
 
 	const imageRef = useRef<HTMLImageElement>(null);
 
@@ -117,7 +122,9 @@ function ImageEditor({ image }: Props) {
 				ctx.beginPath();
 				ctx.rect(w, w, canvas.width - w * 2, canvas.height - w * 2);
 				ctx.clip();
+
 				//draw in stickers
+				const stickerSize = STICKER_VH * window.innerHeight / 100;
 				for (const sticker of relativeStickers) {
 					const stickerImg = new Image();
 
@@ -131,8 +138,8 @@ function ImageEditor({ image }: Props) {
 					const aspectRatio = stickerImg.naturalWidth / stickerImg.naturalHeight;
 
 					ctx.drawImage(stickerImg, sticker.x + w, sticker.y + w,
-						STICKER_SIZE * scale * aspectRatio,
-						STICKER_SIZE * scale);
+						stickerSize * scale * aspectRatio,
+						stickerSize * scale);
 				}
 
 				ctx.restore();
@@ -170,17 +177,38 @@ function ImageEditor({ image }: Props) {
 
 	return (
 		<div className="ImageEditor">
-			<div className="EditedImage">
-				<FrameWrapper frame={frame} className="MainImage" onClick={onDownload}>
+			<div className="MainImage">
+				<FrameWrapper frame={frame} onClick={onDownload}>
 					<img src={image} ref={imageRef} alt="main"
 						style={{
 							filter: getFilter(),
+							height: "40vh",
 						}} />
 				</FrameWrapper>
 			</div>
-			<FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
-			<StickerGrabber onStickerMoved={onStickerMoved} />
-			<FrameSelector onFrameSelected={(frame: Frame) => setFrame(frame)} />
+			<div className="ImageEditorMenu">
+				{selectedMenu && <div className="MenuItemContainer">
+					<div /> {/* filler element to add margin to the left */}
+					{{
+						filters: <FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />,
+						stickers: <StickerGrabber />,
+						frames: <FrameSelector onFrameSelected={(frame: Frame) => setFrame(frame)} />
+					}[selectedMenu]}
+				</div>}
+				<div className="ImageEditorButtonContainer">
+					{/* menu buttons */}
+					<button className="ImageEditorButton" onClick={() => setSelectedMenu("stickers")}>
+						Stickers
+					</button>
+					<button className="ImageEditorButton" onClick={() => setSelectedMenu("filters")}>
+						Filters
+					</button>
+					<button className="ImageEditorButton" onClick={() => setSelectedMenu("frames")}>
+						Frames
+					</button>
+				</div>
+			</div>
+			<StickerManager onStickerMoved={onStickerMoved} />
 		</div>
 	)
 }

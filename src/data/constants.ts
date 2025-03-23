@@ -1,1 +1,1 @@
-export const STICKER_SIZE = 100;
+export const STICKER_VH = 18;
