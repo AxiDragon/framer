@@ -1,9 +1,6 @@
 import stickerImages from "../data/stickers";
-import { useRef } from "react";
 
 const StickerGrabber = () => {
-	const firstSticker = useRef<HTMLImageElement>(null);
-
 	const onAddSticker = (sticker: string, e: React.MouseEvent) => {
 		window.dispatchEvent(new CustomEvent("add-sticker", {
 			detail: {
