@@ -119,7 +119,7 @@ input[type="range"]::-ms-thumb {
 .FrameRenderer {
 	height: auto;
 	width: auto;
-	max-height: 54dvh;
+	max-height: 45dvh;
 	max-width: 72dvw;
 	display: block;
 }
