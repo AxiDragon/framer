@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { STICKER_VH } from "../data/constants";
+import { STICKER_DVH } from "../data/constants";
 
 export type StickerProps = {
 	image: string;
@@ -77,9 +77,9 @@ function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0
 	return (
 		<img src={image} alt="sticker" className="Sticker"
 			style={{
-				top: `${position.y / window.innerHeight * 100}vh`,
-				left: `${position.x / window.innerWidth * 100}vw`,
-				height: `${STICKER_VH}vh`
+				top: `${position.y / window.innerHeight * 100}dvh`,
+				left: `${position.x / window.innerWidth * 100}dvw`,
+				height: `${STICKER_DVH}dvh`
 			}}
 			onMouseDown={onMouseDown}
 			ref={imgRef}

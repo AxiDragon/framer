@@ -8,7 +8,7 @@ import { EMPTY_FRAME } from "./data/frames";
 import FrameWrapper from "./components/FrameRenderer";
 import { StickerProps } from "./components/Sticker";
 import StickerManager from "./components/StickerManager";
-import { STICKER_VH } from "./data/constants";
+import { STICKER_DVH } from "./data/constants";
 import { filters } from "./data/filters";
 
 export type MenuName = "stickers" | "filters" | "frames";
@@ -91,7 +91,7 @@ function ImageEditor({ image }: Props) {
 				ctx.clip();
 
 				//draw in stickers
-				const stickerSize = STICKER_VH * window.innerHeight / 100;
+				const stickerSize = STICKER_DVH * window.innerHeight / 100;
 				for (const sticker of relativeStickers) {
 					const stickerImg = new Image();
 
@@ -145,11 +145,11 @@ function ImageEditor({ image }: Props) {
 	return (
 		<div className="ImageEditor">
 			<div className="MainImage">
-				<FrameWrapper frame={frame} onClick={onDownload}>
-					<img src={image} ref={imageRef} alt="main"
+				<FrameWrapper frame={frame}>
+					<img src={image} ref={imageRef} alt="main" draggable="false"
 						style={{
 							filter: getFilter(),
-							height: "40vh",
+							height: "40dvh",
 						}} />
 				</FrameWrapper>
 			</div>
