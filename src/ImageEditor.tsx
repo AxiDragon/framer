@@ -142,6 +142,10 @@ function ImageEditor({ image }: Props) {
 		}
 	}
 
+	const onReturn = () => {
+		window.dispatchEvent(new CustomEvent("return"));
+	}
+
 	return (
 		<div className="ImageEditor">
 			<div className="MainImage">
@@ -174,6 +178,12 @@ function ImageEditor({ image }: Props) {
 				</div>
 			</div>
 			<StickerManager onStickerMoved={onStickerMoved} />
+			<button className="DownloadButton CornerButton" onClick={onDownload}>
+				Download
+			</button>
+			<button className="ReturnButton CornerButton" onClick={onReturn}>
+				Return
+			</button>
 		</div>
 	)
 }
