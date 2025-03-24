@@ -46,16 +46,22 @@ const FrameWrapper = forwardRef<HTMLImageElement, Props>(
 		}, [])
 
 		return (
-			<img src={image} className="FrameRenderer" alt="frame" draggable={false}
-				onClick={onClick} ref={imageRef} {...imageProps}
+			<div className="FrameRendererContainer"
 				style={{
-					...style,
 					cursor: onClick ? "pointer" : "default",
 					pointerEvents: onClick ? "auto" : "none",
 					touchAction: onClick ? "manipulation" : "none",
+					zIndex: 2,
 					borderWidth: `${frameWidth}px`,
 					borderImage: `url(${frame.frame}) ${FRAME_IMAGE_SIZE / 3} stretch`,
-				}} />
+				}} >
+				<img src={image} className="FrameRenderer" alt="frame" draggable={false}
+					onClick={onClick} ref={imageRef} {...imageProps}
+					style={{
+						...style,
+						zIndex: 1,
+					}} />
+			</div>
 		);
 	}
 );

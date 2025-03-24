@@ -15,13 +15,16 @@ body,
 	background-color: aqua;
 }
 
+.FrameRendererContainer {
+	border-style: solid;
+	border-color: transparent;
+}
+
 .FrameRenderer {
 	height: auto;
 	width: auto;
 	max-height: 54dvh;
 	max-width: 72dvw;
-	border-style: solid;
-	border-color: transparent;
 	display: block;
 }
 

@@ -51,22 +51,6 @@ function ImageEditor({ image }: Props) {
 		}
 	};
 
-	const getContentRect = () => {
-		if (!imageRef.current) return { x: 0, y: 0, width: 0, height: 0 };
-
-		const styles = window.getComputedStyle(imageRef.current);
-		const borderWidth = parseFloat(styles.borderWidth || "0");
-
-		const fullRect = imageRef.current.getBoundingClientRect();
-
-		return {
-			x: fullRect.x + borderWidth,
-			y: fullRect.y + borderWidth,
-			width: fullRect.width - borderWidth * 2,
-			height: fullRect.height - borderWidth * 2,
-		}
-	}
-
 	const onDownload = async () => {
 		if (!imageRef.current) return;
 
@@ -80,16 +64,16 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
-			const contentRect = getContentRect();
+			const rect = imageRef.current.getBoundingClientRect();
 
-			const scale = img.naturalHeight / contentRect.height;
+			const scale = img.naturalHeight / rect.height;
 			const w = frame !== EMPTY_FRAME ?
 				Math.max(img.naturalHeight, img.naturalWidth) * FRAME_WIDTH_PERCENTAGE : 0;
 
 			const relativeStickers = Object.values(stickers).map(sticker => ({
 				...sticker,
-				x: (sticker.x - contentRect.x) * scale,
-				y: (sticker.y - contentRect.y) * scale,
+				x: (sticker.x - rect.x) * scale,
+				y: (sticker.y - rect.y) * scale,
 			}));
 
 			const canvas = document.createElement("canvas");
