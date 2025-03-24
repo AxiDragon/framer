@@ -170,22 +170,32 @@ function ImageEditor({ image }: Props) {
 				<div className="ImageEditorButtonContainer">
 					{/* menu buttons */}
 					<button className="ImageEditorButton" onClick={() => setSelectedMenu("stickers")}>
-						Stickers
+						<span className="material-symbols-outlined">
+							circles
+						</span>
 					</button>
 					<button className="ImageEditorButton" onClick={() => setSelectedMenu("filters")}>
-						Filters
+						<span className="material-symbols-outlined">
+							tune
+						</span>
 					</button>
 					<button className="ImageEditorButton" onClick={() => setSelectedMenu("frames")}>
-						Frames
+						<span className="material-symbols-outlined">
+							filter_frames
+						</span>
 					</button>
 				</div>
 			</div>
 			<StickerManager onStickerMoved={onStickerMoved} />
 			<button className="DownloadButton CornerButton" onClick={onDownload}>
-				Download
+				<span className="material-symbols-outlined">
+					download
+				</span>
 			</button>
 			<button className="ReturnButton CornerButton" onClick={onReturn}>
-				Return
+				<span className="material-symbols-outlined">
+					keyboard_return
+				</span>
 			</button>
 		</div>
 	)
