@@ -7,13 +7,12 @@ type Props = {
 	image: string;
 	//should be between 0 and 1
 	framePercentage?: number;
-	onClick?: () => void;
 	style?: React.CSSProperties;
 	imageProps?: React.ImgHTMLAttributes<HTMLImageElement>;
 }
 
 const FrameWrapper = forwardRef<HTMLImageElement, Props>(
-	({ frame, framePercentage = 0.1, onClick, image, style, imageProps }: Props, ref) => {
+	({ frame, framePercentage = 0.1, image, style, imageProps }: Props, ref) => {
 		const [frameWidth, setFrameWidth] = useState(0);
 		const imageRef = useRef<HTMLImageElement>(null);
 
@@ -48,18 +47,13 @@ const FrameWrapper = forwardRef<HTMLImageElement, Props>(
 		return (
 			<div className="FrameRendererContainer"
 				style={{
-					cursor: onClick ? "pointer" : "default",
-					pointerEvents: onClick ? "auto" : "none",
-					touchAction: onClick ? "manipulation" : "none",
-					zIndex: 2,
 					borderWidth: `${frameWidth}px`,
 					borderImage: `url(${frame.frame}) ${FRAME_IMAGE_SIZE / 3} stretch`,
 				}} >
 				<img src={image} className="FrameRenderer" alt="frame" draggable={false}
-					onClick={onClick} ref={imageRef} {...imageProps}
+					ref={imageRef} {...imageProps}
 					style={{
 						...style,
-						zIndex: 1,
 					}} />
 			</div>
 		);

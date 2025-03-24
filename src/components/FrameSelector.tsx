@@ -12,7 +12,7 @@ const FrameSelector = ({ onFrameSelected, hide = false }: Props) => {
 			{frames.map((frame, index) => (
 				<img key={index} src={frame.frame}
 					onClick={() => onFrameSelected(frame)}
-					style={{ display: hide ? "none" : "block" }} />
+					style={{ cursor: "pointer", display: hide ? "none" : "block" }} />
 			))}
 			<div style={{
 				fontSize: 50, height: "100%", width: 100,

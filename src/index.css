@@ -18,6 +18,8 @@ body,
 .FrameRendererContainer {
 	border-style: solid;
 	border-color: transparent;
+	pointer-events: none;
+	touch-action: none;
 }
 
 .FrameRenderer {
