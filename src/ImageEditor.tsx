@@ -17,6 +17,16 @@ export type Props = {
 	image: string;
 }
 
+const selectedStyle: React.CSSProperties = {
+	backgroundColor: "var(--white)",
+	borderWidth: 0,
+	cursor: "default",
+};
+
+const unselectedStyle: React.CSSProperties = {
+	cursor: "pointer",
+};
+
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
 	const [frame, setFrame] = useState<Frame>(EMPTY_FRAME);
@@ -169,17 +179,23 @@ function ImageEditor({ image }: Props) {
 				</div>}
 				<div className="ImageEditorButtonContainer">
 					{/* menu buttons */}
-					<button className="ImageEditorButton" onClick={() => setSelectedMenu("stickers")}>
+					<button className="ImageEditorButton"
+						onClick={() => setSelectedMenu("stickers")}
+						style={selectedMenu === "stickers" ? selectedStyle : unselectedStyle}>
 						<span className="material-symbols-outlined">
 							circles
 						</span>
 					</button>
-					<button className="ImageEditorButton" onClick={() => setSelectedMenu("filters")}>
+					<button className="ImageEditorButton"
+						onClick={() => setSelectedMenu("filters")}
+						style={selectedMenu === "filters" ? selectedStyle : unselectedStyle}>
 						<span className="material-symbols-outlined">
 							tune
 						</span>
 					</button>
-					<button className="ImageEditorButton" onClick={() => setSelectedMenu("frames")}>
+					<button className="ImageEditorButton"
+						onClick={() => setSelectedMenu("frames")}
+						style={selectedMenu === "frames" ? selectedStyle : unselectedStyle}>
 						<span className="material-symbols-outlined">
 							filter_frames
 						</span>

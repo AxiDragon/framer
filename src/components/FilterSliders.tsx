@@ -14,13 +14,8 @@ const FilterSliders = ({ filterSliders, onFilterSliderChanged, hide = false }: P
 			};
 
 			return (
-				<div key={filter.name} style={{
-					height: "100%",
+				<div key={filter.name} className="FilterSlider" style={{
 					display: hide ? "none" : "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					textAlign: "center",
-					alignContent: "center"
 				}}>
 					<p>{filter.name}</p>
 					<input type="range" min={0} max={1} defaultValue={filter.defaultValue} step={0.01} onChange={onChange} />
