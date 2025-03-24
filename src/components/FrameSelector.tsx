@@ -1,6 +1,5 @@
 import frames, { EMPTY_FRAME } from "../data/frames";
 import Frame from "./Frame";
-import FrameWrapper from "./FrameRenderer";
 
 type Props = {
 	onFrameSelected: (frame: Frame) => void;
@@ -11,12 +10,9 @@ const FrameSelector = ({ onFrameSelected, hide = false }: Props) => {
 	return (
 		<>
 			{frames.map((frame, index) => (
-				<FrameWrapper key={index} frame={frame}
+				<img key={index} src={frame.frame}
 					onClick={() => onFrameSelected(frame)}
-					framePercentage={0.5}
-					style={{ display: hide ? "none" : "grid" }}>
-					<div style={{ width: 50, height: "50%" }} />
-				</FrameWrapper>
+					style={{ display: hide ? "none" : "block" }} />
 			))}
 			<div style={{
 				fontSize: 50, height: "100%", width: 100,

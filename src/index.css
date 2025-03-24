@@ -16,40 +16,13 @@ body,
 }
 
 .FrameRenderer {
-	display: grid;
-	grid-template-columns: auto fit-content auto;
-	grid-template-rows: auto fit-content auto;
-	width: fit-content;
-	height: fit-content;
-}
-
-.FrameRenderer img[alt="edge"] {
-	object-fit: fill;
-	z-index: 3;
-}
-
-.FrameRenderer img[alt="corner"] {
-	z-index: 3;
-}
-
-.FrameRenderer img {
-	object-fit: contain;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
-}
-
-.MainImage {
-	display: flex;
-	place-content: center;
-	height: 60dvh;
-	width: 100%;
-	padding: 25px;
-	box-sizing: border-box;
-}
-
-.MainImage img {
-	object-fit: contain;
+	height: auto;
+	width: auto;
+	max-height: 54dvh;
+	max-width: 72dvw;
+	border-style: solid;
+	border-color: transparent;
+	display: block;
 }
 
 .ImageEditor {

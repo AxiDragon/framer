@@ -1,89 +1,63 @@
-import { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Frame from "./Frame";
+import { FRAME_IMAGE_SIZE } from "../data/constants";
 
 type Props = {
 	frame: Frame;
+	image: string;
 	//should be between 0 and 1
 	framePercentage?: number;
 	onClick?: () => void;
-	children?: React.ReactNode;
 	style?: React.CSSProperties;
-	className?: string;
+	imageProps?: React.ImgHTMLAttributes<HTMLImageElement>;
 }
 
-function FrameWrapper({ frame, framePercentage = 0.1, onClick, children, style, className }: Props) {
-	const { cornerImage, topEdgeImage, rightEdgeImage } = frame.getStringImages();
-	const [frameWidth, setFrameWidth] = useState(0);
-	const contentRef = useRef<HTMLDivElement>(null);
+const FrameWrapper = forwardRef<HTMLImageElement, Props>(
+	({ frame, framePercentage = 0.1, onClick, image, style, imageProps }: Props, ref) => {
+		const [frameWidth, setFrameWidth] = useState(0);
+		const imageRef = useRef<HTMLImageElement>(null);
 
-	useEffect(() => {
-		const resizeObserver = new ResizeObserver((entries) => {
-			if (contentRef.current) {
-				const rect = entries[0].contentRect;
-				const width = Math.max(rect.height, rect.width);
+		useImperativeHandle(ref, () => imageRef.current!, [imageRef]);
+
+		const updateFrameWidth = () => {
+			if (imageRef.current) {
+				const img = imageRef.current;
+				const width = Math.max(img.width, img.height);
 				setFrameWidth(width * framePercentage);
 			}
-		});
-
-		if (contentRef.current) {
-			resizeObserver.observe(contentRef.current);
-		}
-
-		return () => {
-			if (contentRef.current) {
-				resizeObserver.disconnect();
-			}
 		};
-	}, [contentRef, framePercentage]);
 
-	return (
-		<div className={`FrameRenderer ${className || ""}`} onClick={onClick} style={{
-			...style,
-			gridTemplateColumns: `${frameWidth}px auto ${frameWidth}px`,
-			gridTemplateRows: `${frameWidth}px auto ${frameWidth}px`,
-			cursor: onClick ? "pointer" : "default",
-			pointerEvents: onClick ? "auto" : "none",
-			touchAction: onClick ? "manipulation" : "none",
-		}}>
-			<img src={cornerImage} alt="corner" draggable={false}
-				style={{ height: frameWidth, width: frameWidth }} />
-			<img src={topEdgeImage} alt="edge" draggable={false}
-				style={{ height: frameWidth, width: "100%" }} />
-			<img src={cornerImage} alt="corner" draggable={false}
-				style={{
-					height: frameWidth, width: frameWidth,
-					transform: "rotate(90deg)",
-				}} />
+		useEffect(() => {
+			const resizeObserver = new ResizeObserver(() => updateFrameWidth());
 
-			<img src={rightEdgeImage} alt="edge" draggable={false}
+			if (imageRef.current) {
+				resizeObserver.observe(imageRef.current);
+			}
+
+			return () => {
+				if (imageRef.current) {
+					resizeObserver.disconnect();
+				}
+			};
+		}, [imageRef, framePercentage]);
+
+		useEffect(() => {
+			updateFrameWidth();
+		}, [])
+
+		return (
+			<img src={image} className="FrameRenderer" alt="frame" draggable={false}
+				onClick={onClick} ref={imageRef} {...imageProps}
 				style={{
-					width: frameWidth,
-					transform: "rotate(180deg)",
+					...style,
+					cursor: onClick ? "pointer" : "default",
+					pointerEvents: onClick ? "auto" : "none",
+					touchAction: onClick ? "manipulation" : "none",
+					borderWidth: `${frameWidth}px`,
+					borderImage: `url(${frame.frame}) ${FRAME_IMAGE_SIZE / 3} stretch`,
 				}} />
-			<div ref={contentRef}>
-				{children}
-			</div>
-			<img src={rightEdgeImage} alt="edge" draggable={false}
-				style={{
-					width: frameWidth,
-				}} />
-			<img src={cornerImage} alt="corner" draggable={false}
-				style={{
-					transform: "rotate(-90deg)",
-					height: frameWidth, width: frameWidth
-				}} />
-			<img src={topEdgeImage} alt="edge" draggable={false}
-				style={{
-					transform: "rotate(180deg)",
-					height: frameWidth,
-				}} />
-			<img src={cornerImage} alt="corner" draggable={false}
-				style={{
-					transform: "rotate(180deg)",
-					height: frameWidth, width: frameWidth
-				}} />
-		</div>
-	);
-}
+		);
+	}
+);
 
 export default FrameWrapper;

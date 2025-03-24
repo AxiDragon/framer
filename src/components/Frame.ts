@@ -1,6 +1,5 @@
 export default class Frame {
-	//rightEdgeImage should just be topEdgeImage rotated 90 degrees clockwise
-	constructor(private cornerImage: string, private topEdgeImage: string, private rightEdgeImage: string) { }
+	constructor(public frame: string, private corner: string, private edge: string) { }
 
 	private async loadImage(src: string): Promise<HTMLImageElement> {
 		const img = new Image();
@@ -16,18 +15,18 @@ export default class Frame {
 	}
 
 	public async getHTMLImages() {
-		const cornerImage = await this.loadImage(this.cornerImage);
-		const topEdgeImage = await this.loadImage(this.topEdgeImage);
-		const rightEdgeImage = await this.loadImage(this.rightEdgeImage);
+		const frameImage = await this.loadImage(this.frame);
+		const cornerImage = await this.loadImage(this.corner);
+		const topEdgeImage = await this.loadImage(this.edge);
 
-		return { cornerImage, topEdgeImage, rightEdgeImage };
+		return { cornerImage, topEdgeImage, frameImage };
 	}
 
 	public getStringImages() {
 		return {
-			cornerImage: this.cornerImage,
-			topEdgeImage: this.topEdgeImage,
-			rightEdgeImage: this.rightEdgeImage,
+			cornerImage: this.corner,
+			topEdgeImage: this.edge,
+			frameImage: this.frame,
 		};
 	}
 }

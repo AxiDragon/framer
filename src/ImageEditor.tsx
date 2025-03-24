@@ -8,7 +8,7 @@ import { EMPTY_FRAME } from "./data/frames";
 import FrameWrapper from "./components/FrameRenderer";
 import { StickerProps } from "./components/Sticker";
 import StickerManager from "./components/StickerManager";
-import { STICKER_DVH } from "./data/constants";
+import { FRAME_WIDTH_PERCENTAGE, STICKER_DVH } from "./data/constants";
 import { filters } from "./data/filters";
 
 export type MenuName = "stickers" | "filters" | "frames";
@@ -23,7 +23,7 @@ function ImageEditor({ image }: Props) {
 	const [stickers, setStickers] = useState<Record<number, StickerProps>>({});
 	const [selectedMenu, setSelectedMenu] = useState<MenuName | null>("filters");
 
-	const imageRef = useRef<HTMLImageElement>(null);
+	const imageRef = useRef<HTMLImageElement>(null!);
 
 	const getFilter = (): string => {
 		let result = "";
@@ -51,6 +51,22 @@ function ImageEditor({ image }: Props) {
 		}
 	};
 
+	const getContentRect = () => {
+		if (!imageRef.current) return { x: 0, y: 0, width: 0, height: 0 };
+
+		const styles = window.getComputedStyle(imageRef.current);
+		const borderWidth = parseFloat(styles.borderWidth || "0");
+
+		const fullRect = imageRef.current.getBoundingClientRect();
+
+		return {
+			x: fullRect.x + borderWidth,
+			y: fullRect.y + borderWidth,
+			width: fullRect.width - borderWidth * 2,
+			height: fullRect.height - borderWidth * 2,
+		}
+	}
+
 	const onDownload = async () => {
 		if (!imageRef.current) return;
 
@@ -64,14 +80,16 @@ function ImageEditor({ image }: Props) {
 				img.src = image;
 			});
 
-			const scale = img.naturalHeight / imageRef.current.offsetHeight;
-			const w = frame !== EMPTY_FRAME ? Math.max(img.naturalHeight, img.naturalWidth) / 10 : 0;
+			const contentRect = getContentRect();
 
-			const imageRect = imageRef.current.getBoundingClientRect();
+			const scale = img.naturalHeight / contentRect.height;
+			const w = frame !== EMPTY_FRAME ?
+				Math.max(img.naturalHeight, img.naturalWidth) * FRAME_WIDTH_PERCENTAGE : 0;
+
 			const relativeStickers = Object.values(stickers).map(sticker => ({
 				...sticker,
-				x: (sticker.x - imageRect.x) * scale,
-				y: (sticker.y - imageRect.y) * scale,
+				x: (sticker.x - contentRect.x) * scale,
+				y: (sticker.y - contentRect.y) * scale,
 			}));
 
 			const canvas = document.createElement("canvas");
@@ -152,15 +170,12 @@ function ImageEditor({ image }: Props) {
 
 	return (
 		<div className="ImageEditor">
-			<div className="MainImage">
-				<FrameWrapper frame={frame}>
-					<img src={image} ref={imageRef} alt="main" draggable="false"
-						style={{
-							filter: getFilter(),
-							height: "40dvh",
-						}} />
-				</FrameWrapper>
-			</div>
+			<FrameWrapper frame={frame} image={image}
+				framePercentage={FRAME_WIDTH_PERCENTAGE}
+				ref={imageRef}
+				style={{
+					filter: getFilter(),
+				}} />
 			<div className="ImageEditorMenu">
 				{selectedMenu && <div className="MenuItemContainer">
 					<div /> {/* filler element to add margin to the left */}
