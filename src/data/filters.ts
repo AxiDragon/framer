@@ -26,9 +26,17 @@ export const filters: Filter[] = [
 		onChange: (e: number) => `${e * 200}%`
 	}),
 	new Filter({
+		name: "Saturation",
 		propertyName: "saturate",
 		value: "100%",
 		defaultValue: 0.5,
 		onChange: (e: number) => `${e * 200}%`
+	}),
+	new Filter({
+		name: "Hue",
+		propertyName: "hue-rotate",
+		value: "0deg",
+		defaultValue: 0,
+		onChange: (e: number) => `${e * 360}deg`
 	}),
 ];

@@ -26,6 +26,6 @@ export default class Filter {
 	}
 
 	public getFilterString(): string {
-		return `${this.name}(${this.value})`;
+		return `${this.propertyName}(${this.value})`;
 	}
 }
