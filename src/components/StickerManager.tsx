@@ -15,13 +15,14 @@ function StickerManager({ onStickerMoved }: Props) {
 		const handleAddSticker = (e: Event) => {
 			const customEvent = e as CustomEvent;
 			const sticker = customEvent.detail.sticker as string;
-			const mouseEvent = customEvent.detail.e as React.MouseEvent;
+			const x = customEvent.detail.x as number;
+			const y = customEvent.detail.y as number;
+			const imgElement = customEvent.detail.element as HTMLImageElement;
 
-			const imgElement = mouseEvent.currentTarget as HTMLImageElement;
 			const rect = imgElement.getBoundingClientRect();
 
-			setLastClickPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
-			setLastMouseOffset({ x: rect.left - mouseEvent.clientX, y: rect.top - mouseEvent.clientY });
+			setLastClickPosition({ x, y });
+			setLastMouseOffset({ x: rect.left - x, y: rect.top - y });
 			setStickerCount(stickerCount + 1);
 			setStickers([...stickers, sticker]);
 		}

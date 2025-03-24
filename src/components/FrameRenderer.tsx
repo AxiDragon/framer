@@ -42,6 +42,8 @@ function FrameWrapper({ frame, framePercentage = 0.1, onClick, children, style, 
 			gridTemplateColumns: `${frameWidth}px auto ${frameWidth}px`,
 			gridTemplateRows: `${frameWidth}px auto ${frameWidth}px`,
 			cursor: onClick ? "pointer" : "default",
+			pointerEvents: onClick ? "auto" : "none",
+			touchAction: onClick ? "manipulation" : "none",
 		}}>
 			<img src={cornerImage} alt="corner" draggable={false}
 				style={{ height: frameWidth, width: frameWidth }} />

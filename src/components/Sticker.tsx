@@ -20,7 +20,7 @@ type Props = {
 }
 
 function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0, instantDrag = false, id }: Props) {
-	const [mouseOffset, setMouseOffset] = useState({ x: xOffset, y: yOffset });
+	const [offset, setOffset] = useState({ x: xOffset, y: yOffset });
 	const [position, setPosition] = useState({ x: x + xOffset, y: y + yOffset });
 	const [isDragging, setIsDragging] = useState(instantDrag);
 	const imgRef = useRef<HTMLImageElement>(null);
@@ -29,14 +29,14 @@ function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0
 	function calculateMouseOffset(mouseX: number, mouseY: number) {
 		if (imgRef.current) {
 			const rect = imgRef.current.getBoundingClientRect();
-			setMouseOffset({
+			setOffset({
 				x: rect.left - mouseX,
 				y: rect.top - mouseY,
 			});
 		}
 	}
 
-	const onMouseUp = () => {
+	const handleDragEnd = () => {
 		if (isDragging && onStickerMoved) {
 			onStickerMoved({ image, id, x: position.x, y: position.y });
 		}
@@ -44,44 +44,84 @@ function Sticker({ image, onStickerMoved, x = 0, y = 0, xOffset = 0, yOffset = 0
 		setIsDragging(false);
 	}
 
-	const onMouseDown = (e: React.MouseEvent) => {
+	const handleDragStart = (clientX: number, clientY: number) => {
 		setIsDragging(true);
-		calculateMouseOffset(e.clientX, e.clientY);
+		calculateMouseOffset(clientX, clientY);
 	}
 
-	const onMouseMove = (e: MouseEvent) => {
+	const handleDragMove = (clientX: number, clientY: number) => {
 		if (isDragging) {
 			setPosition({
-				x: e.clientX + mouseOffset.x,
-				y: e.clientY + mouseOffset.y,
+				x: clientX + offset.x,
+				y: clientY + offset.y,
 			});
 		}
 	};
 
+	// mouse events
+	const onMouseDown = (e: React.MouseEvent) => {
+		handleDragStart(e.clientX, e.clientY);
+	}
+
+	const onMouseMove = (e: MouseEvent) => {
+		handleDragMove(e.clientX, e.clientY);
+	}
+
+	const onMouseUp = () => {
+		handleDragEnd();
+	}
+
+	// touch events
+	const onTouchStart = (e: React.TouchEvent) => {
+		if (e.touches.length === 1) {
+			const touch = e.touches[0];
+			handleDragStart(touch.clientX, touch.clientY);
+		}
+	}
+
+	const onTouchMove = (e: TouchEvent) => {
+		if (e.touches.length === 1) {
+			const touch = e.touches[0];
+			handleDragMove(touch.clientX, touch.clientY);
+		}
+	}
+
+	const onTouchEnd = () => {
+		handleDragEnd();
+	}
+
 	useEffect(() => {
 		window.addEventListener("mousemove", onMouseMove);
-
-		return () => {
-			window.removeEventListener("mousemove", onMouseMove);
-		};
-	}, [isDragging, mouseOffset]);
-
-	useEffect(() => {
 		window.addEventListener("mouseup", onMouseUp);
 
 		return () => {
+			window.removeEventListener("mousemove", onMouseMove);
 			window.removeEventListener("mouseup", onMouseUp);
 		};
-	}, [position, isDragging]);
+	}, [isDragging, offset, position]);
+
+	useEffect(() => {
+		window.addEventListener("touchmove", onTouchMove);
+		window.addEventListener("touchend", onTouchEnd);
+		window.addEventListener("touchcancel", onTouchEnd);
+
+		return () => {
+			window.removeEventListener("touchmove", onTouchMove);
+			window.removeEventListener("touchend", onTouchEnd);
+			window.removeEventListener("touchcancel", onTouchEnd);
+		};
+	}, [isDragging, offset, position]);
 
 	return (
 		<img src={image} alt="sticker" className="Sticker"
 			style={{
 				top: `${position.y / window.innerHeight * 100}dvh`,
 				left: `${position.x / window.innerWidth * 100}dvw`,
-				height: `${STICKER_DVH}dvh`
+				height: `${STICKER_DVH}dvh`,
+				touchAction: "none",
 			}}
 			onMouseDown={onMouseDown}
+			onTouchStart={onTouchStart}
 			ref={imgRef}
 			draggable={false}
 		/>
