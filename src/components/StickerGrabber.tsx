@@ -1,6 +1,10 @@
 import stickerImages from "../data/stickers";
 
-const StickerGrabber = () => {
+type Props = {
+	hide?: boolean;
+}
+
+const StickerGrabber = ({ hide = false }: Props) => {
 	const onAddSticker = (sticker: string, e: React.MouseEvent) => {
 		window.dispatchEvent(new CustomEvent("add-sticker", {
 			detail: {
@@ -20,6 +24,7 @@ const StickerGrabber = () => {
 						alt="sticker"
 						draggable={false}
 						onMouseDown={(e: React.MouseEvent) => onAddSticker(sticker, e)}
+						style={{ display: hide ? "none" : "block" }}
 					/>
 				))
 			}

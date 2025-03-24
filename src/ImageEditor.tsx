@@ -9,52 +9,19 @@ import FrameWrapper from "./components/FrameRenderer";
 import { StickerProps } from "./components/Sticker";
 import StickerManager from "./components/StickerManager";
 import { STICKER_VH } from "./data/constants";
+import { filters } from "./data/filters";
 
-type MenuName = "stickers" | "filters" | "frames";
+export type MenuName = "stickers" | "filters" | "frames";
 
-type Props = {
+export type Props = {
 	image: string;
 }
-
-const filters: Filter[] = [
-	new Filter({
-		name: "opacity",
-		value: "1",
-		defaultValue: 1,
-		onChange: (e: number) => `${e}`
-	}),
-	new Filter({
-		name: "sepia",
-		value: "0%",
-		defaultValue: 0,
-		onChange: (e: number) => `${e * 100}%`
-	}),
-	new Filter({
-		name: "brightness",
-		value: "100%",
-		defaultValue: 0.5,
-		onChange: (e: number) => `${e * 200}%`
-	}),
-	new Filter({
-		name: "contrast",
-		value: "100%",
-		defaultValue: 0.5,
-		onChange: (e: number) => `${e * 200}%`
-	}),
-	new Filter({
-		name: "saturate",
-		value: "100%",
-		defaultValue: 0.5,
-		onChange: (e: number) => `${e * 200}%`
-	}),
-];
 
 function ImageEditor({ image }: Props) {
 	const [filterStyle, setFilterStyle] = useState<Filter[]>(filters);
 	const [frame, setFrame] = useState<Frame>(EMPTY_FRAME);
 	const [stickers, setStickers] = useState<Record<number, StickerProps>>({});
-	const [selectedMenu, setSelectedMenu] = useState<MenuName | null>("stickers");
-	// const [selectedMenu, setSelectedMenu] = useState<MenuName | null>(null);
+	const [selectedMenu, setSelectedMenu] = useState<MenuName | null>("filters");
 
 	const imageRef = useRef<HTMLImageElement>(null);
 
@@ -76,7 +43,7 @@ function ImageEditor({ image }: Props) {
 	}
 
 	const onFilterSliderChanged = (filter: string, value: number) => {
-		const filterToUpdate = filterStyle.find(f => f.name === filter);
+		const filterToUpdate = filterStyle.find(f => f.propertyName === filter);
 
 		if (filterToUpdate) {
 			filterToUpdate.setValue(value);
@@ -189,11 +156,9 @@ function ImageEditor({ image }: Props) {
 			<div className="ImageEditorMenu">
 				{selectedMenu && <div className="MenuItemContainer">
 					<div /> {/* filler element to add margin to the left */}
-					{{
-						filters: <FilterSliders filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />,
-						stickers: <StickerGrabber />,
-						frames: <FrameSelector onFrameSelected={(frame: Frame) => setFrame(frame)} />
-					}[selectedMenu]}
+					<FilterSliders hide={selectedMenu !== "filters"} filterSliders={filterStyle} onFilterSliderChanged={onFilterSliderChanged} />
+					<StickerGrabber hide={selectedMenu !== "stickers"} />
+					<FrameSelector hide={selectedMenu !== "frames"} onFrameSelected={(frame: Frame) => setFrame(frame)} />
 				</div>}
 				<div className="ImageEditorButtonContainer">
 					{/* menu buttons */}
