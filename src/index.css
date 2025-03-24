@@ -17,13 +17,21 @@ body,
 	color: var(--black);
 }
 
-button {
+button,
+input {
 	border-style: solid;
 	border-width: var(--border-width);
 	border-color: var(--white);
 	box-sizing: border-box;
 	background-color: var(--light-gray);
 	transition: all 0.15s ease-out;
+}
+
+input {
+	color: var(--black);
+	text-align: center;
+	border-width: 0;
+	padding: 5px;
 }
 
 button:hover {
@@ -43,6 +51,15 @@ button:active {
 	justify-content: center;
 	align-items: center;
 	background-color: var(--black);
+}
+
+.ImageInput {
+	color: var(--white);
+	display: flex;
+	gap: 10px;
+	flex-direction: column;
+	place-content: center;
+	text-align: center;
 }
 
 .FrameRendererContainer {

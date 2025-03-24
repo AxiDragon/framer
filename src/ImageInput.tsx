@@ -43,20 +43,22 @@ const ImageInput = ({ onImageAccepted }: Props) => {
 	};
 
 	return (
-		<div>
-			<p>Upload an image</p>
-			<div>
-				<p>Load from device</p>
-				<input type="file" accept="image/*" onChange={onImageInput} />
-			</div>
-			<div style={{ width: "75%" }} >
-				<p>Load from web</p>
-				<input type="text"
-					placeholder="Image URL"
-					onChange={(e) => setImageUrl(e.target.value)}
-					style={{ width: "75%" }} />
-				<button onClick={onLinkInput}>Load</button>
-			</div>
+		<div className="ImageInput">
+			<h2 style={{ fontWeight: "bold" }}>Upload an image</h2>
+			<h3>Load from device</h3>
+			<input type="file" accept="image/*" onChange={onImageInput} />
+			<h3>Load from web</h3>
+			<input type="text"
+				placeholder="Image URL"
+				onChange={(e) => setImageUrl(e.target.value)}
+			/>
+			<button onClick={onLinkInput} style={{
+				padding: 5,
+				borderWidth: 0,
+				fontWeight: "bold",
+				backgroundColor: "var(--highlight)",
+				fontSize: 12,
+			}}>Load</button>
 		</div>
 	);
 }
