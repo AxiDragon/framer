@@ -46,7 +46,7 @@ button:active {
 
 input[type="range"] {
 	-webkit-appearance: none;
-	width: 100%;
+	width: 100px;
 	height: 16px;
 	background: var(--dark-gray);
 	border-radius: 8px;

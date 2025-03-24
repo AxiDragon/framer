@@ -1,13 +1,17 @@
-import cat from '../assets/stickers/cat.png';
-import chick from '../assets/stickers/chick.png';
-import flower from '../assets/stickers/flower.png';
-import heart from '../assets/stickers/heart.webp';
+import chicken from '../assets/stickers/chicken.png';
+import clover from '../assets/stickers/clover.png';
+import heart from '../assets/stickers/heart.png';
+import glasses from '../assets/stickers/glasses.png';
+import plusFace from '../assets/stickers/plus-face.png';
+import roundBoy from '../assets/stickers/round-boy.png';
 
 const stickers = [
-	cat,
-	chick,
-	flower,
+	chicken,
 	heart,
+	glasses,
+	clover,
+	plusFace,
+	roundBoy
 ];
 
 export default stickers;
