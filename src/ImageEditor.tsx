@@ -143,7 +143,11 @@ function ImageEditor({ image }: Props) {
 	}
 
 	const onReturn = () => {
-		window.dispatchEvent(new CustomEvent("return"));
+		const confirmReturn = window.confirm("Are you sure you want to return? This image will not be saved.");
+
+		if (confirmReturn) {
+			window.dispatchEvent(new CustomEvent("return"));
+		}
 	}
 
 	return (
